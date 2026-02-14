@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Club {
+  id          String   @id @default(uuid())
+  name        String
+  collegeName String
+  clubEmail   String   @unique
+
+  academicYears   AcademicYear[]
+  roleAssignments RoleAssignment[]
+  events          Event[]          // ✅ added
+}
+
+model AcademicYear {
+  id        String  @id @default(uuid())
+  yearLabel String
+  isActive  Boolean
+
+  clubId String
+  club   Club @relation(fields: [clubId], references: [id])
+
+  roleAssignments RoleAssignment[]
+  events          Event[]          // ✅ added
+}
+
+model User {
+  id           String @id @default(uuid())
+  name         String
+  email        String @unique
+  passwordHash String
+
+  roleAssignments RoleAssignment[]
+}
+
+model RoleAssignment {
+  id   String @id @default(uuid())
+  role String
+
+  userId String
+  user   User @relation(fields: [userId], references: [id])
+
+  clubId String
+  club   Club @relation(fields: [clubId], references: [id])
+
+  academicYearId String
+  academicYear   AcademicYear @relation(fields: [academicYearId], references: [id])
+}
+
+model Event {
+  id             String   @id @default(uuid())
+  name           String
+  type           String
+  date           DateTime
+  venue          String
+  description    String?
+  createdAt      DateTime @default(now())
+
+  clubId         String
+  academicYearId String
+
+  attendanceToken String?   // ✅ added
+
+  club           Club          @relation(fields: [clubId], references: [id])
+  academicYear   AcademicYear  @relation(fields: [academicYearId], references: [id])
+
+  participants   Participant[]
+  certificateTemplatePath String?
+  certificateLayout       Json?
+}
+
+model Participant {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  phone     String
+
+  eventId   String
+  event     Event    @relation(fields: [eventId], references: [id])
+
+  isPresent            Boolean @default(false)
+  certificateGenerated Boolean @default(false)
+  certificateEmailed   Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  @@unique([email, eventId])
+}
