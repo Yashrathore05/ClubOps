@@ -1,4 +1,5 @@
 import prisma from "../lib/prisma";
+import { Participant } from "@prisma/client";
 
 export async function getEventStatus(eventId: string) {
   const event = await prisma.event.findUnique({
@@ -13,12 +14,17 @@ export async function getEventStatus(eventId: string) {
   }
 
   const totalParticipants = event.participants.length;
-  const presentCount = event.participants.filter(p => p.isPresent).length;
-  const certificatesGenerated = event.participants.filter(
-    p => p.certificateGenerated
+
+  const presentCount = event.participants.filter(
+    (p: Participant) => p.isPresent
   ).length;
+
+  const certificatesGenerated = event.participants.filter(
+    (p: Participant) => p.certificateGenerated
+  ).length;
+
   const certificatesEmailed = event.participants.filter(
-    p => p.certificateEmailed
+    (p: Participant) => p.certificateEmailed
   ).length;
 
   let status: string = "DRAFT";

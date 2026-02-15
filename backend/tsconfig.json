@@ -13,9 +13,6 @@
     "skipLibCheck": true,
 
     "baseUrl": ".",
-    "paths": {
-      "@prisma/client": ["src/generated/prisma"]
-    }
   },
 
   "include": [
