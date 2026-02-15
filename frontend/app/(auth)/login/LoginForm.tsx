@@ -35,7 +35,7 @@ export default function LoginForm() {
     setLoading(true);
 
     try {
-      await api.post("/auth/login", { email, password });
+      await api.post("https://clubops-backend.onrender.com/auth/login", { email, password });
       router.push("/events");
     } catch (err: any) {
       setError(err.message || "Invalid email or password");
@@ -78,7 +78,7 @@ export default function LoginForm() {
           )}
 
           <a
-            href="/api/auth/google"
+            href="https://clubops-backend.onrender.com/api/auth/google"
             className="mb-5 flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50"
           >
             <GoogleIcon />
